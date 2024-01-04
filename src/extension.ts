@@ -1,26 +1,29 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { MarkieSidebarProvider } from './sidebarProvider';
+import { parseComments } from './markieParser';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    console.log('Extension activated');
+    const sidebarProvider = new MarkieSidebarProvider();
+    vscode.window.registerTreeDataProvider('markieSidebar', sidebarProvider);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "markie-vsc" is now active!');
+    vscode.commands.registerCommand('markie.refresh', () => sidebarProvider.refresh());
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('markie-vsc.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from markie!');
-	});
+    context.subscriptions.push(vscode.commands.registerCommand('markie.showMarkie', () => {
+        vscode.commands.executeCommand('workbench.view.extension.markieSidebar');
+    }));
 
-	context.subscriptions.push(disposable);
+    // Register an event listener to update the sidebar when the active editor changes
+    vscode.window.onDidChangeActiveTextEditor(() => {
+        if (vscode.window.activeTextEditor) {
+            sidebarProvider.refresh(); // Refresh without passing any arguments
+        }
+    });
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }

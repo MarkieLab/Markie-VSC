@@ -9,13 +9,40 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+  ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "markie",
+          "title": "Markie",
+          "icon": "media/markie.svg"
+        }
+      ]
+    },
+    "views": {
+      "markie": [
+        {
+          "id": "markieSidebar",
+          "name": "Markie"
+        },
+        {
+          "id": "bookmarksHelpAndFeedback",
+          "name": "%bookmarks.views.HelpAndFeedback.name%",
+          "visibility": "collapsed"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "markie-vsc.helloWorld",
-        "title": "Hello World"
+        "command": "markie.refresh",
+        "title": "Markie: Refresh"
+      },
+      {
+        "command": "markie.showMarkie",
+        "title": "Markie: Show Markie"
       }
     ]
   },
